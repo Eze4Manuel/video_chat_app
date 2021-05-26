@@ -1,0 +1,7 @@
+
+
+@mixin desktop {
+    @media (max-width: 600px) {
+        @content
+    }  
+}
