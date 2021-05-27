@@ -37,8 +37,7 @@ nextApp.prepare().then(() => {
     app.get("*", (req, res) => {
       return nextHandler(req, res);
     });
-       
-    server.listen(PORT, "127.0.0.1");
+    server.listen(PORT);
 
   })
   .catch(ex => {
