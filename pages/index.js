@@ -12,7 +12,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment"
 import PhoneIcon from "@material-ui/icons/Phone"
 
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(process.env.HOST);
 
 export default function Home() {
 
