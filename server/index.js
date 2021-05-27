@@ -29,8 +29,6 @@ nextApp.prepare().then(() => {
     })
 
 
-
-
     // Using Express Route to handle routing on the backend
     const showRoutes = require("./routes/index.js");
 
@@ -43,7 +41,6 @@ nextApp.prepare().then(() => {
     server.listen(PORT, "127.0.0.1");
 
   })
-
   .catch(ex => {
     console.error(ex.stack);
     process.exit(1);
