@@ -1,28 +1,49 @@
-const express = require("express");
+const app = require("express")();
 const next = require("next");
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
+
 
 const PORT = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
+const nextApp = next({ dev });
+const nextHandler = nextApp.getRequestHandler();
 
-app
-  .prepare()
-  .then(() => {
-    const server = express();
+nextApp.prepare().then(() => {
+
+    io.on("connection", (socket) => {
+      
+      socket.emit("me", socket.id)
+
+      socket.on("disconnect", () => {
+        socket.broadcast.emit("callEnded")
+      })
+
+      socket.on("callUser", (data) => {
+        io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
+      })
+
+      socket.on("answerCall", (data) => {
+        io.to(data.to).emit("callAccepted", data.signal)
+      })
+    })
+
+
+
+
+    // Using Express Route to handle routing on the backend
     const showRoutes = require("./routes/index.js");
 
-    server.use("/api", showRoutes(server));
+    app.use("/api", showRoutes(app));
 
-    server.get("*", (req, res) => {
-      return handle(req, res);
+    app.get("*", (req, res) => {
+      return nextHandler(req, res);
     });
+       
+    server.listen(PORT, "127.0.0.1");
 
-    server.listen(PORT, err => {
-      if (err) throw err;
-      console.log(`> Ready on ${PORT}`);
-    });
   })
+
   .catch(ex => {
     console.error(ex.stack);
     process.exit(1);

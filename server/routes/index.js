@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 function routes(app) {
-  router.get("/movies", (req, res) => {
+  router.get("/webrtc-connect", (req, res) => {
     res.end("We made it! And it's great");
   });
   
